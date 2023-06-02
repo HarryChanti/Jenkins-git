@@ -16,7 +16,7 @@ pipeline {
    }
    stage('push') {
      steps {
-         sh 'docker push dockerhchanti/jenkins-docker-hub:2
+         sh 'docker push dockerhchanti/jenkins-docker-hub:2'
    }
    }
 
