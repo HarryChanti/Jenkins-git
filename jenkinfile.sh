@@ -1,30 +1,35 @@
-pipeline {
-  agent any
-  environment {
-     DOCKERHUB_CREDENTIALS = credentials ('dockerhub')
-  }
-  stages {
-      stage('build'){
-      steps {
-          sh 'docker build -t dockerhchanti/jenkins-docker-hub:2 . '
-       }
-       }
-   stage('login') {
-   steps {
-    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-   }
-   }
-   stage('push') {
-     steps {
-         sh 'docker push dockerhchanti/jenkins-docker-hub:2'
-   }
-   }
-
-}
-}
-post {
-        always {
-            sh 'docker logout'
+node { checkout scm
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials ('dockerhub')
+         // /registry= 'dockerhchanti/jenkins-alpain'
+    }
+    stage('Build and Push') {
+        docker.withRegistry('', 'dockerhub')
+        {
+            def CustomImage = docker.build('dockerhchanti/jenkins-alpain')
+            CustomImage.push()
         }
     }
+    //    stage('SCM Checkout') {
+    //     git branch: 'main', credentialsId: 'github', url: 'https://github.com/HarryChanti/Jenkins-git.git'
+    //    }
+    //    stage('Build') {
+        
+    //         sh 'docker build -t dockerhchanti/jenkins-alpain:11 .'
+        
+    //     }
+    //    stage('login') {
+        
+    //         sh -c 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login --username $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        
+    //    }
+    //    stage('Push') {
+            
+    //             sh 'docker push dockerhchanti/jenkins-alpain:11'
+           
+//   }
+    
+    
+    
+}   
   
